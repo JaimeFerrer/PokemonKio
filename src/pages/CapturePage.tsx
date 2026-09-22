@@ -6,7 +6,8 @@ import { RetroPanel } from '../components/RetroPanel'
 import { TopBar } from '../components/TopBar'
 import { useAuth } from '../context/AuthContext'
 import { useGeolocation } from '../hooks/useGeolocation'
-import { createCapture, uploadCapturePhoto } from '../services/captures'
+import { createCapture } from '../services/captures'
+import { cloudinaryReady, uploadPhoto } from '../services/cloudinary'
 import './CapturePage.css'
 
 export function CapturePage() {
@@ -49,14 +50,14 @@ export function CapturePage() {
 
     setSubmitting(true)
     try {
-      const { url, path } = await uploadCapturePhoto(user.uid, photoFile)
+      const { url, publicId } = await uploadPhoto(photoFile)
       await createCapture({
         userId: user.uid,
         userName: user.displayName || 'Entrenador',
         pokemonName: pokemonName.trim(),
         comment: comment.trim(),
         photoUrl: url,
-        photoPath: path,
+        photoPublicId: publicId,
         lat: geo.lat,
         lng: geo.lng,
       })
@@ -72,6 +73,13 @@ export function CapturePage() {
     <div className="screen">
       <TopBar title="Capturar Pokémon" />
       <DialogBox>¡Un Pokémon salvaje apareció! Hazle una foto, dale nombre y captúralo.</DialogBox>
+
+      {!cloudinaryReady && (
+        <DialogBox>
+          Falta configurar Cloudinary (VITE_CLOUDINARY_CLOUD_NAME / VITE_CLOUDINARY_UPLOAD_PRESET) para poder subir
+          fotos. Revisa el README.
+        </DialogBox>
+      )}
 
       <RetroPanel className="capture-photo">
         {photoPreview ? (
@@ -128,7 +136,7 @@ export function CapturePage() {
 
           {error && <p className="text-body" style={{ color: 'var(--accent-red)' }}>{error}</p>}
 
-          <RetroButton type="submit" disabled={submitting}>
+          <RetroButton type="submit" disabled={submitting || !cloudinaryReady}>
             {submitting ? 'Capturando...' : '¡Capturar!'}
           </RetroButton>
         </form>

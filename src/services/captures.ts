@@ -11,19 +11,10 @@ import {
   serverTimestamp,
   updateDoc,
 } from 'firebase/firestore'
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
-import { db, storage } from '../firebase'
+import { db } from '../firebase'
 import type { Capture, NewCapture } from '../types'
 
 const CAPTURES = 'captures'
-
-export async function uploadCapturePhoto(userId: string, file: Blob): Promise<{ url: string; path: string }> {
-  const path = `captures/${userId}/${Date.now()}.jpg`
-  const storageRef = ref(storage, path)
-  await uploadBytes(storageRef, file, { contentType: 'image/jpeg' })
-  const url = await getDownloadURL(storageRef)
-  return { url, path }
-}
 
 export async function createCapture(data: NewCapture): Promise<void> {
   await addDoc(collection(db, CAPTURES), {
@@ -46,7 +37,7 @@ export function subscribeToCaptures(callback: (captures: Capture[]) => void): ()
         pokemonName: data.pokemonName,
         comment: data.comment ?? '',
         photoUrl: data.photoUrl,
-        photoPath: data.photoPath,
+        photoPublicId: data.photoPublicId,
         lat: data.lat,
         lng: data.lng,
         locationLabel: data.locationLabel,
@@ -74,7 +65,7 @@ export function subscribeToCapture(id: string, callback: (capture: Capture | nul
       pokemonName: data.pokemonName,
       comment: data.comment ?? '',
       photoUrl: data.photoUrl,
-      photoPath: data.photoPath,
+      photoPublicId: data.photoPublicId,
       lat: data.lat,
       lng: data.lng,
       locationLabel: data.locationLabel,

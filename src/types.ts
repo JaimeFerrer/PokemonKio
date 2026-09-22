@@ -12,7 +12,7 @@ export interface Capture {
   pokemonName: string
   comment: string
   photoUrl: string
-  photoPath: string
+  photoPublicId: string
   lat: number
   lng: number
   locationLabel?: string

@@ -15,30 +15,40 @@ App web (PWA) para capturar a la gente más graciosa de vuestras fiestas y viaje
 ## Stack
 
 - React + TypeScript + Vite
-- Firebase: Auth, Firestore (base de datos), Storage (fotos)
+- Firebase: Auth + Firestore (base de datos) — plan gratuito **Spark**, sin tarjeta de crédito.
+- Cloudinary: almacenamiento de fotos — plan gratuito, sin tarjeta de crédito. (Firebase Storage exige el plan de pago Blaze, así que usamos Cloudinary en su lugar.)
 - React Router
 - Leaflet / React-Leaflet (mapa, tiles de OpenStreetMap, sin necesitar API key)
 - vite-plugin-pwa (instalable + service worker)
 
 ## Puesta en marcha
 
-### 1. Crear el proyecto de Firebase
+### 1. Crear el proyecto de Firebase (Auth + Firestore, gratis, sin tarjeta)
 
 1. Ve a [console.firebase.google.com](https://console.firebase.google.com) y crea un proyecto nuevo.
 2. **Authentication** → Sign-in method → activa **Correo electrónico/contraseña**.
-3. **Firestore Database** → créala (modo producción).
-4. **Storage** → créalo (modo producción).
-5. En "Configuración del proyecto" → "Tus apps" → añade una app web y copia las credenciales (`apiKey`, `authDomain`, etc.).
+3. **Firestore Database** → créala (modo producción, plan Spark).
+4. En "Configuración del proyecto" (⚙️) → "Tus apps" → añade una app web (`</>`) y copia las credenciales (`apiKey`, `authDomain`, `projectId`, `messagingSenderId`, `appId`).
 
-### 2. Configurar variables de entorno
+No hace falta activar Storage: las fotos se guardan en Cloudinary (paso siguiente).
+
+### 2. Crear la cuenta de Cloudinary (fotos, gratis, sin tarjeta)
+
+1. Regístrate en [cloudinary.com](https://cloudinary.com) (plan gratuito).
+2. En el **Dashboard** copia tu **Cloud name**.
+3. Ve a **Settings** (⚙️) → **Upload** → sección **Upload presets** → **Add upload preset**.
+4. Ponle un nombre, y cambia **Signing Mode** de "Signed" a **"Unsigned"** (necesario para subir fotos directamente desde el navegador sin backend). Guarda.
+5. Copia el nombre del preset.
+
+### 3. Configurar variables de entorno
 
 ```bash
 cp .env.example .env
 ```
 
-Rellena `.env` con las credenciales del paso anterior.
+Rellena `.env` con las credenciales de Firebase y de Cloudinary de los dos pasos anteriores.
 
-### 3. Instalar dependencias y arrancar en local
+### 4. Instalar dependencias y arrancar en local
 
 ```bash
 npm install
@@ -47,18 +57,18 @@ npm run dev
 
 Abre la URL que te indique Vite. Para probar cámara/GPS desde el móvil en tu red local, usa `npm run dev -- --host` y entra desde el móvil a la IP que te muestre (algunos navegadores exigen HTTPS para cámara/GPS fuera de `localhost`).
 
-### 4. Desplegar reglas de seguridad de Firestore y Storage
+### 5. Desplegar las reglas de seguridad de Firestore
 
-Las reglas (`firestore.rules`, `storage.rules`) ya están incluidas: cada foto solo la puede subir/editar su propio entrenador, y los "me gusta" son el único campo que cualquier usuario autenticado puede tocar de una captura ajena.
+Las reglas (`firestore.rules`) ya están incluidas: cada entrenador solo puede crear/editar sus propias capturas, y los "me gusta" son el único campo que cualquier usuario autenticado puede tocar de una captura ajena.
 
 ```bash
 npm install -g firebase-tools   # si no lo tienes
 firebase login
-firebase init                  # selecciona el proyecto creado, usa los ficheros ya existentes
-firebase deploy --only firestore:rules,storage:rules
+firebase use --add              # selecciona el proyecto que creaste
+firebase deploy --only firestore:rules
 ```
 
-### 5. Build y despliegue de la app
+### 6. Build y despliegue de la app
 
 Puedes desplegar en Firebase Hosting, Vercel o Netlify. Con Firebase Hosting:
 
@@ -75,8 +85,8 @@ src/
   context/        AuthContext (sesión del entrenador)
   hooks/          useGeolocation
   pages/          Pantallas: Login, Menú, Capturar, Pokédex, Detalle, Mapa, Ranking, Perfil
-  services/       Acceso a Firestore/Storage (captures.ts)
-  firebase.ts     Inicialización del SDK de Firebase
+  services/       captures.ts (Firestore) y cloudinary.ts (subida de fotos)
+  firebase.ts     Inicialización del SDK de Firebase (Auth + Firestore)
   types.ts        Tipos compartidos (Capture, AppUser)
 ```
 
