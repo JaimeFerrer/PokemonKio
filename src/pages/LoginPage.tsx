@@ -106,6 +106,8 @@ function mapError(err: unknown): string {
       return 'Email o contraseña incorrectos.'
     case 'auth/weak-password':
       return 'La contraseña debe tener al menos 6 caracteres.'
+    case 'auth/network-request-failed':
+      return 'No hay conexión con el servidor. Revisa tu internet e inténtalo de nuevo.'
     default:
       return err instanceof Error ? err.message : 'Algo ha ido mal, inténtalo de nuevo.'
   }
