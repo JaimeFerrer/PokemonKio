@@ -6,28 +6,42 @@ import { RetroPanel } from '../components/RetroPanel'
 import { useAuth } from '../context/AuthContext'
 import './LoginPage.css'
 
+type Mode = 'login' | 'register' | 'reset'
+
 export function LoginPage() {
-  const { login, register } = useAuth()
+  const { login, register, resetPassword } = useAuth()
   const navigate = useNavigate()
-  const [mode, setMode] = useState<'login' | 'register'>('login')
+  const [mode, setMode] = useState<Mode>('login')
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
+  const [notice, setNotice] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
+
+  function switchMode(next: Mode) {
+    setMode(next)
+    setError(null)
+    setNotice(null)
+  }
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
     setError(null)
+    setNotice(null)
     setBusy(true)
     try {
       if (mode === 'register') {
         if (!name.trim()) throw new Error('Elige un nombre de entrenador')
         await register(name.trim(), email.trim(), password)
+        navigate('/')
+      } else if (mode === 'reset') {
+        await resetPassword(email.trim())
+        setNotice('Te hemos enviado un email para restablecer tu contraseña. Revisa también la carpeta de spam.')
       } else {
         await login(email.trim(), password)
+        navigate('/')
       }
-      navigate('/')
     } catch (err) {
       setError(mapError(err))
     } finally {
@@ -41,9 +55,9 @@ export function LoginPage() {
         Pokemon<span style={{ color: 'var(--accent-red)' }}>Kio</span>
       </h1>
       <DialogBox>
-        {mode === 'login'
-          ? '¡Bienvenido de nuevo, entrenador! Inicia sesión para seguir cazando Pokémon graciosos.'
-          : 'Crea tu cuenta de entrenador para empezar a capturar Pokémon por ahí.'}
+        {mode === 'login' && '¡Bienvenido de nuevo, entrenador! Inicia sesión para seguir cazando Pokémon graciosos.'}
+        {mode === 'register' && 'Crea tu cuenta de entrenador para empezar a capturar Pokémon por ahí.'}
+        {mode === 'reset' && 'Escribe tu email y te enviaremos un enlace para elegir una contraseña nueva.'}
       </DialogBox>
 
       <RetroPanel>
@@ -64,33 +78,50 @@ export function LoginPage() {
               required
             />
           </label>
-          <label className="login-form__field">
-            <span className="title-sm">Contraseña</span>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              minLength={6}
-              required
-            />
-          </label>
+          {mode !== 'reset' && (
+            <label className="login-form__field">
+              <span className="title-sm">Contraseña</span>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                minLength={6}
+                required
+              />
+            </label>
+          )}
+
+          {mode === 'login' && (
+            <button type="button" className="login-forgot title-sm" onClick={() => switchMode('reset')}>
+              ¿Has olvidado tu contraseña?
+            </button>
+          )}
 
           {error && <p className="text-body" style={{ color: 'var(--accent-red)' }}>{error}</p>}
+          {notice && <p className="text-body" style={{ color: 'var(--accent-green)' }}>{notice}</p>}
 
           <RetroButton type="submit" disabled={busy}>
-            {busy ? 'Un momento...' : mode === 'login' ? 'Entrar' : 'Crear cuenta'}
+            {busy
+              ? 'Un momento...'
+              : mode === 'login'
+                ? 'Entrar'
+                : mode === 'register'
+                  ? 'Crear cuenta'
+                  : 'Enviar enlace'}
           </RetroButton>
         </form>
       </RetroPanel>
 
-      <button
-        type="button"
-        className="title-sm login-switch"
-        onClick={() => setMode(mode === 'login' ? 'register' : 'login')}
-      >
-        {mode === 'login' ? '¿No tienes cuenta? Regístrate' : '¿Ya tienes cuenta? Inicia sesión'}
-      </button>
+      {mode === 'reset' ? (
+        <button type="button" className="title-sm login-switch" onClick={() => switchMode('login')}>
+          ← Volver a inicio de sesión
+        </button>
+      ) : (
+        <button type="button" className="title-sm login-switch" onClick={() => switchMode(mode === 'login' ? 'register' : 'login')}>
+          {mode === 'login' ? '¿No tienes cuenta? Regístrate' : '¿Ya tienes cuenta? Inicia sesión'}
+        </button>
+      )}
     </div>
   )
 }

@@ -19,6 +19,17 @@
   font-size: 12px;
 }
 
+.login-forgot {
+  background: none;
+  border: none;
+  color: var(--paper);
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 8px;
+  text-align: right;
+  padding: 2px 0;
+}
+
 .login-switch {
   background: none;
   border: none;
