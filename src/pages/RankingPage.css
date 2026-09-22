@@ -1,0 +1,68 @@
+.ranking-tabs {
+  display: flex;
+  gap: 8px;
+}
+
+.ranking-tab {
+  flex: 1;
+  padding: 10px;
+  background: var(--paper-dark);
+  color: var(--ink);
+  border: 3px solid var(--border);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.ranking-tab--active {
+  background: var(--accent-yellow);
+}
+
+.ranking-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ranking-list__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.ranking-list__pos {
+  width: 20px;
+  flex-shrink: 0;
+  font-size: 11px;
+  text-align: center;
+}
+
+.ranking-list__item img {
+  width: 36px;
+  height: 36px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 2px solid var(--border);
+}
+
+.ranking-list__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.ranking-list__info span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ranking-list__likes {
+  font-size: 10px;
+  flex-shrink: 0;
+}

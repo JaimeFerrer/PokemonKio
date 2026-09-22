@@ -1,0 +1,45 @@
+.detail-photo {
+  padding: 0;
+  overflow: hidden;
+}
+
+.detail-photo img {
+  width: 100%;
+  display: block;
+}
+
+.detail-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.detail-comment {
+  font-style: italic;
+  margin: 0 0 10px;
+}
+
+.detail-like {
+  background: var(--paper);
+  color: var(--ink);
+  border: 3px solid var(--border);
+  border-radius: 4px;
+  padding: 10px 14px;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.detail-map {
+  padding: 8px;
+  overflow: hidden;
+}
+
+.detail-view-map {
+  background: none;
+  border: none;
+  color: var(--accent-blue);
+  cursor: pointer;
+  text-align: center;
+  padding: 4px;
+}

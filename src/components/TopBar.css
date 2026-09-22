@@ -1,0 +1,27 @@
+.top-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 4px;
+}
+
+.top-bar__back {
+  background: var(--paper);
+  color: var(--ink);
+  border: 3px solid var(--border);
+  border-radius: 4px;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  box-shadow: 2px 2px 0 var(--border);
+  flex-shrink: 0;
+}
+
+.top-bar__back:active {
+  transform: translate(1px, 1px);
+  box-shadow: none;
+}
+
+.top-bar__title {
+  margin: 0;
+}

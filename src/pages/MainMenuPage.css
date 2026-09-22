@@ -1,0 +1,8 @@
+.main-menu__header {
+  text-align: center;
+  padding-top: 24px;
+}
+
+.main-menu__header .title-lg {
+  margin: 0 0 8px;
+}

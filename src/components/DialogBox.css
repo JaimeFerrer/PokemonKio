@@ -1,0 +1,10 @@
+.dialog-box {
+  background: var(--paper);
+  color: var(--ink);
+  padding: 14px;
+  border-radius: 6px;
+}
+
+.dialog-box p {
+  margin: 0;
+}

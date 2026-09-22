@@ -1,0 +1,61 @@
+.capture-photo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.capture-photo__preview {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border: 3px solid var(--border);
+  border-radius: 4px;
+}
+
+.capture-photo__placeholder {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--paper-dark);
+  color: var(--ink);
+  border: 3px dashed var(--border);
+  border-radius: 4px;
+}
+
+.capture-location {
+  background: none;
+  color: var(--paper);
+  border: none;
+  width: 100%;
+  padding: 4px 0;
+  text-align: left;
+  cursor: pointer;
+  line-height: 1.6;
+}
+
+.capture-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.capture-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.capture-form__field input,
+.capture-form__field textarea {
+  padding: 10px;
+  border: 3px solid var(--border);
+  border-radius: 4px;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 12px;
+  font-family: var(--font-pixel);
+  resize: vertical;
+}

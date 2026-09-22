@@ -1,0 +1,31 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /users/{userId} {
+      allow read: if request.auth != null;
+      allow create, update: if request.auth != null && request.auth.uid == userId;
+      allow delete: if false;
+    }
+
+    match /captures/{captureId} {
+      allow read: if request.auth != null;
+
+      allow create: if request.auth != null
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.likes == 0
+        && request.resource.data.likedBy.size() == 0
+        && request.resource.data.pokemonName is string
+        && request.resource.data.pokemonName.size() > 0
+        && request.resource.data.lat is number
+        && request.resource.data.lng is number;
+
+      // Solo se permite tocar likes/likedBy (dar/quitar "me gusta"), nunca reescribir la captura de otro.
+      allow update: if request.auth != null
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['likes', 'likedBy']);
+
+      allow delete: if request.auth != null && resource.data.userId == request.auth.uid;
+    }
+  }
+}
