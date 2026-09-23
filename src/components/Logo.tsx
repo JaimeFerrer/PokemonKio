@@ -1,9 +1,15 @@
 import './Logo.css'
 
+const TOP_TEXT = Array.from('POKÉMON')
+
 export function Logo({ size = 'lg' }: { size?: 'lg' | 'md' }) {
   return (
     <div className={`logo logo--${size}`}>
-      <div className="logo__top">POKÉMON</div>
+      <div className="logo__top">
+        {TOP_TEXT.map((char, i) => (
+          <span key={i}>{char}</span>
+        ))}
+      </div>
       <div className="logo__bottom">
         <span>KI</span>
         <svg viewBox="0 0 100 100" className="logo__pokeball" aria-hidden="true">

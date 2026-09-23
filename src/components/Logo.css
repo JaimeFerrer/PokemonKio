@@ -2,22 +2,26 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
   line-height: 0.85;
   user-select: none;
 }
 
 .logo__top {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
   font-family: 'Luckiest Guy', cursive;
   color: #ffcb05;
   -webkit-text-stroke: 2px #2a5da8;
   paint-order: stroke fill;
   text-shadow: 3px 3px 0 #17284d;
-  letter-spacing: 1px;
 }
 
 .logo__bottom {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 2px;
   font-family: 'Titan One', cursive;
   color: #ffcb05;
@@ -34,15 +38,15 @@
 }
 
 .logo--lg .logo__top {
-  font-size: 26px;
+  font-size: clamp(30px, 10.5vw, 52px);
 }
 .logo--lg .logo__bottom {
-  font-size: 58px;
+  font-size: clamp(22px, 7vw, 34px);
 }
 
 .logo--md .logo__top {
-  font-size: 20px;
+  font-size: clamp(24px, 9vw, 40px);
 }
 .logo--md .logo__bottom {
-  font-size: 44px;
+  font-size: clamp(18px, 5.5vw, 26px);
 }
