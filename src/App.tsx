@@ -12,6 +12,7 @@ import { MapPage } from './pages/MapPage'
 import { PokedexPage } from './pages/PokedexPage'
 import { ProfilePage } from './pages/ProfilePage'
 import { RankingPage } from './pages/RankingPage'
+import { TrainerPokedexPage } from './pages/TrainerPokedexPage'
 
 function RequireAuth({ children }: { children: ReactNode }) {
   const { user, loading } = useAuth()
@@ -53,6 +54,14 @@ function AppRoutes() {
         element={
           <RequireAuth>
             <CaptureDetailPage />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/entrenador/:userId"
+        element={
+          <RequireAuth>
+            <TrainerPokedexPage />
           </RequireAuth>
         }
       />

@@ -15,6 +15,17 @@
   margin-bottom: 10px;
 }
 
+.detail-trainer {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: inherit;
+  font-family: var(--font-pixel);
+  font-size: 11px;
+  text-decoration: underline;
+}
+
 .detail-comment {
   font-style: italic;
   margin: 0 0 10px;
@@ -42,4 +53,37 @@
   cursor: pointer;
   text-align: center;
   padding: 4px;
+}
+
+.detail-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.detail-actions > * {
+  flex: 1;
+}
+
+.detail-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.detail-edit-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.detail-edit-form__field input,
+.detail-edit-form__field textarea {
+  padding: 10px;
+  border: 3px solid var(--border);
+  border-radius: 4px;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 12px;
+  font-family: var(--font-pixel);
+  resize: vertical;
 }

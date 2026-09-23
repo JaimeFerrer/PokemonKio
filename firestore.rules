@@ -21,9 +21,16 @@ service cloud.firestore {
         && request.resource.data.lat is number
         && request.resource.data.lng is number;
 
-      // Solo se permite tocar likes/likedBy (dar/quitar "me gusta"), nunca reescribir la captura de otro.
-      allow update: if request.auth != null
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['likes', 'likedBy']);
+      allow update: if request.auth != null && (
+        // Dar/quitar "me gusta": cualquier usuario autenticado, solo esos dos campos.
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['likes', 'likedBy'])
+        ||
+        // Editar nombre/comentario: solo el dueño de la captura.
+        (resource.data.userId == request.auth.uid
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['pokemonName', 'comment'])
+          && request.resource.data.pokemonName is string
+          && request.resource.data.pokemonName.size() > 0)
+      );
 
       allow delete: if request.auth != null && resource.data.userId == request.auth.uid;
     }

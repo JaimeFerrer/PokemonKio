@@ -1,41 +1,18 @@
-.pokedex-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-}
-
-.pokedex-card {
-  background: var(--paper);
-  color: var(--ink);
-  border-radius: 4px;
-  padding: 8px;
-  cursor: pointer;
+.pokedex-tabs {
   display: flex;
-  flex-direction: column;
-  gap: 6px;
-  text-align: left;
+  gap: 8px;
 }
 
-.pokedex-card:active {
-  transform: translate(1px, 1px);
-}
-
-.pokedex-card__number {
-  font-size: 8px;
-  color: var(--panel);
-}
-
-.pokedex-card__img {
-  width: 100%;
-  aspect-ratio: 1;
-  object-fit: cover;
-  border: 2px solid var(--border);
+.pokedex-tab {
+  flex: 1;
+  padding: 10px;
+  background: var(--paper-dark);
+  color: var(--ink);
+  border: 3px solid var(--border);
   border-radius: 4px;
+  cursor: pointer;
 }
 
-.pokedex-card__name {
-  font-size: 9px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.pokedex-tab--active {
+  background: var(--accent-yellow);
 }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type FormEvent } from 'react'
 import { MapContainer, Marker, TileLayer } from 'react-leaflet'
 import { useNavigate, useParams } from 'react-router-dom'
 import { DialogBox } from '../components/DialogBox'
@@ -7,7 +7,7 @@ import { RetroButton } from '../components/RetroButton'
 import { RetroPanel } from '../components/RetroPanel'
 import { TopBar } from '../components/TopBar'
 import { useAuth } from '../context/AuthContext'
-import { deleteCapture, subscribeToCapture, toggleLike } from '../services/captures'
+import { deleteCapture, subscribeToCapture, toggleLike, updateCaptureDetails } from '../services/captures'
 import type { Capture } from '../types'
 import { pokemonMarkerIcon } from '../mapIcon'
 import './CaptureDetailPage.css'
@@ -19,6 +19,11 @@ export function CaptureDetailPage() {
   const [capture, setCapture] = useState<Capture | null | undefined>(undefined)
   const [error, setError] = useState<string | null>(null)
   const [deleting, setDeleting] = useState(false)
+  const [editing, setEditing] = useState(false)
+  const [editName, setEditName] = useState('')
+  const [editComment, setEditComment] = useState('')
+  const [savingEdit, setSavingEdit] = useState(false)
+  const [editError, setEditError] = useState<string | null>(null)
 
   useEffect(() => {
     if (!id) return
@@ -75,6 +80,32 @@ export function CaptureDetailPage() {
     }
   }
 
+  function startEditing() {
+    setEditName(capture!.pokemonName)
+    setEditComment(capture!.comment)
+    setEditError(null)
+    setEditing(true)
+  }
+
+  async function handleSaveEdit(e: FormEvent) {
+    e.preventDefault()
+    if (!isOwner) return
+    if (!editName.trim()) {
+      setEditError('El nombre no puede estar vacío.')
+      return
+    }
+    setSavingEdit(true)
+    setEditError(null)
+    try {
+      await updateCaptureDetails(capture!.id, { pokemonName: editName.trim(), comment: editComment.trim() })
+      setEditing(false)
+    } catch (err) {
+      setEditError(err instanceof Error ? err.message : 'No se pudo guardar el cambio.')
+    } finally {
+      setSavingEdit(false)
+    }
+  }
+
   return (
     <div className="screen">
       <TopBar title={capture.pokemonName} />
@@ -83,16 +114,42 @@ export function CaptureDetailPage() {
         <img src={capture.photoUrl} alt={capture.pokemonName} />
       </RetroPanel>
 
-      <RetroPanel>
-        <div className="detail-meta">
-          <span className="title-sm">🧑 {capture.userName}</span>
-          <span className="title-sm text-muted">{date}</span>
-        </div>
-        {capture.comment && <p className="text-body detail-comment">"{capture.comment}"</p>}
-        <button type="button" className="detail-like" onClick={handleLike} disabled={!user}>
-          {isLiked ? '❤️' : '🤍'} {capture.likes} me gusta
-        </button>
-      </RetroPanel>
+      {editing ? (
+        <RetroPanel>
+          <form className="detail-edit-form" onSubmit={handleSaveEdit}>
+            <label className="detail-edit-form__field">
+              <span className="title-sm">Nombre del Pokémon</span>
+              <input value={editName} onChange={(e) => setEditName(e.target.value)} maxLength={40} required />
+            </label>
+            <label className="detail-edit-form__field">
+              <span className="title-sm">Comentario</span>
+              <textarea value={editComment} onChange={(e) => setEditComment(e.target.value)} maxLength={280} rows={3} />
+            </label>
+            {editError && <p className="text-body" style={{ color: 'var(--accent-red)' }}>{editError}</p>}
+            <div className="detail-actions">
+              <RetroButton type="submit" disabled={savingEdit}>
+                {savingEdit ? 'Guardando...' : 'Guardar'}
+              </RetroButton>
+              <RetroButton type="button" variant="secondary" onClick={() => setEditing(false)} disabled={savingEdit}>
+                Cancelar
+              </RetroButton>
+            </div>
+          </form>
+        </RetroPanel>
+      ) : (
+        <RetroPanel>
+          <div className="detail-meta">
+            <button type="button" className="detail-trainer" onClick={() => navigate(`/entrenador/${capture.userId}`, { state: { userName: capture.userName } })}>
+              🧑 {capture.userName}
+            </button>
+            <span className="title-sm text-muted">{date}</span>
+          </div>
+          {capture.comment && <p className="text-body detail-comment">"{capture.comment}"</p>}
+          <button type="button" className="detail-like" onClick={handleLike} disabled={!user}>
+            {isLiked ? '❤️' : '🤍'} {capture.likes} me gusta
+          </button>
+        </RetroPanel>
+      )}
 
       <RetroPanel className="detail-map">
         <MapContainer
@@ -115,10 +172,15 @@ export function CaptureDetailPage() {
         Ver en el mapa completo →
       </button>
 
-      {isOwner && (
-        <RetroButton variant="danger" onClick={handleDelete} disabled={deleting}>
-          {deleting ? 'Borrando...' : '🗑️ Borrar de mi Pokédex'}
-        </RetroButton>
+      {isOwner && !editing && (
+        <div className="detail-actions">
+          <RetroButton type="button" variant="secondary" onClick={startEditing}>
+            ✏️ Editar
+          </RetroButton>
+          <RetroButton type="button" variant="danger" onClick={handleDelete} disabled={deleting}>
+            {deleting ? 'Borrando...' : '🗑️ Borrar'}
+          </RetroButton>
+        </div>
       )}
     </div>
   )

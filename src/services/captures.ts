@@ -109,3 +109,13 @@ export async function toggleLike(captureId: string, userId: string, isLiked: boo
 export async function deleteCapture(captureId: string): Promise<void> {
   await deleteDoc(doc(db, CAPTURES, captureId))
 }
+
+export async function updateCaptureDetails(
+  captureId: string,
+  data: { pokemonName: string; comment: string },
+): Promise<void> {
+  await updateDoc(doc(db, CAPTURES, captureId), {
+    pokemonName: data.pokemonName,
+    comment: data.comment,
+  })
+}
