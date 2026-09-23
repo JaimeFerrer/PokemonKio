@@ -52,7 +52,7 @@ export function LoginPage() {
 
   return (
     <div className="screen">
-      <Logo />
+      <Logo variant="image" />
       <DialogBox>
         {mode === 'login' && '¡Bienvenido de nuevo, entrenador! Inicia sesión para seguir cazando Pokémon graciosos.'}
         {mode === 'register' && 'Crea tu cuenta de entrenador para empezar a capturar Pokémon por ahí.'}
