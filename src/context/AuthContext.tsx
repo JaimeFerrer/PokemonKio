@@ -18,6 +18,7 @@ interface AuthContextValue {
   login: (email: string, password: string) => Promise<void>
   logout: () => Promise<void>
   resetPassword: (email: string) => Promise<void>
+  updateProfilePhoto: (photoUrl: string) => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined)
@@ -57,8 +58,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await sendPasswordResetEmail(auth, email)
   }
 
+  async function updateProfilePhoto(photoUrl: string) {
+    if (!auth.currentUser) return
+    await updateProfile(auth.currentUser, { photoURL: photoUrl })
+    await setDoc(doc(db, 'users', auth.currentUser.uid), { photoURL: photoUrl }, { merge: true })
+    setUser((prev) => (prev ? ({ ...prev, photoURL: photoUrl } as User) : prev))
+  }
+
   return (
-    <AuthContext.Provider value={{ user, loading, register, login, logout, resetPassword }}>
+    <AuthContext.Provider
+      value={{ user, loading, register, login, logout, resetPassword, updateProfilePhoto }}
+    >
       {children}
     </AuthContext.Provider>
   )
