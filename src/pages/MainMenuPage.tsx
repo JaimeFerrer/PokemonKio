@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { DialogBox } from '../components/DialogBox'
+import { Logo } from '../components/Logo'
 import { MenuList } from '../components/MenuList'
 import { useAuth } from '../context/AuthContext'
 import './MainMenuPage.css'
@@ -12,9 +13,7 @@ export function MainMenuPage() {
   return (
     <div className="screen">
       <div className="main-menu__header">
-        <h1 className="title-lg">
-          Pokemon<span style={{ color: 'var(--accent-red)' }}>Kio</span>
-        </h1>
+        <Logo size="md" />
         <p className="title-sm text-muted">Entrenador: {name}</p>
       </div>
 

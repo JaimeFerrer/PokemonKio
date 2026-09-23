@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { DialogBox } from '../components/DialogBox'
+import { Logo } from '../components/Logo'
 import { RetroButton } from '../components/RetroButton'
 import { RetroPanel } from '../components/RetroPanel'
 import { useAuth } from '../context/AuthContext'
@@ -51,9 +52,7 @@ export function LoginPage() {
 
   return (
     <div className="screen">
-      <h1 className="title-lg" style={{ textAlign: 'center' }}>
-        Pokemon<span style={{ color: 'var(--accent-red)' }}>Kio</span>
-      </h1>
+      <Logo />
       <DialogBox>
         {mode === 'login' && '¡Bienvenido de nuevo, entrenador! Inicia sesión para seguir cazando Pokémon graciosos.'}
         {mode === 'register' && 'Crea tu cuenta de entrenador para empezar a capturar Pokémon por ahí.'}
