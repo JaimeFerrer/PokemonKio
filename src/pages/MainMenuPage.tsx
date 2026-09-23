@@ -13,7 +13,7 @@ export function MainMenuPage() {
   return (
     <div className="screen">
       <div className="main-menu__header">
-        <Logo size="md" />
+        <Logo size="lg" />
         <p className="title-sm text-muted">Entrenador: {name}</p>
       </div>
 

@@ -6,8 +6,7 @@
   user-select: none;
 }
 
-.logo__top,
-.logo__bottom {
+.logo__top {
   font-family: 'Luckiest Guy', cursive;
   color: #ffcb05;
   -webkit-text-stroke: 2px #2a5da8;
@@ -20,7 +19,10 @@
   display: flex;
   align-items: center;
   gap: 2px;
+  font-family: 'Titan One', cursive;
+  color: #ffcb05;
   -webkit-text-stroke: 3px #2a5da8;
+  paint-order: stroke fill;
   text-shadow: 4px 4px 0 #17284d;
 }
 
@@ -32,15 +34,15 @@
 }
 
 .logo--lg .logo__top {
-  font-size: 22px;
+  font-size: 26px;
 }
 .logo--lg .logo__bottom {
-  font-size: 48px;
+  font-size: 58px;
 }
 
 .logo--md .logo__top {
-  font-size: 14px;
+  font-size: 20px;
 }
 .logo--md .logo__bottom {
-  font-size: 32px;
+  font-size: 44px;
 }
