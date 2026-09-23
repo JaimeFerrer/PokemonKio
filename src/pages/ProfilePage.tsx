@@ -66,7 +66,6 @@ export function ProfilePage() {
           aria-label="Cambiar foto de perfil"
         >
           {user?.photoURL ? <img src={user.photoURL} alt="Foto de perfil" /> : '🧑'}
-          <span className="profile-avatar__edit">{uploadingPhoto ? '...' : '📷'}</span>
         </button>
         <input
           ref={photoInputRef}
