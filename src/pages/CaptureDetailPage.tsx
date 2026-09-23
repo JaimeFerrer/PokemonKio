@@ -16,12 +16,22 @@ export function CaptureDetailPage() {
   const { user } = useAuth()
   const navigate = useNavigate()
   const [capture, setCapture] = useState<Capture | null | undefined>(undefined)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     if (!id) return
-    const unsub = subscribeToCapture(id, setCapture)
+    const unsub = subscribeToCapture(id, setCapture, (err) => setError(err.message))
     return unsub
   }, [id])
+
+  if (error) {
+    return (
+      <div className="screen">
+        <TopBar title="Captura" />
+        <DialogBox>No se pudo cargar la captura: {error}</DialogBox>
+      </div>
+    )
+  }
 
   if (capture === undefined) return <Loading />
 

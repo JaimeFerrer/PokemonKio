@@ -25,13 +25,57 @@ export async function createCapture(data: NewCapture): Promise<void> {
   })
 }
 
-export function subscribeToCaptures(callback: (captures: Capture[]) => void): () => void {
+export function subscribeToCaptures(
+  callback: (captures: Capture[]) => void,
+  onError?: (error: Error) => void,
+): () => void {
   const q = query(collection(db, CAPTURES), orderBy('createdAt', 'desc'))
-  return onSnapshot(q, (snapshot) => {
-    const captures = snapshot.docs.map((d) => {
-      const data = d.data()
-      return {
-        id: d.id,
+  return onSnapshot(
+    q,
+    (snapshot) => {
+      const captures = snapshot.docs.map((d) => {
+        const data = d.data()
+        return {
+          id: d.id,
+          userId: data.userId,
+          userName: data.userName,
+          pokemonName: data.pokemonName,
+          comment: data.comment ?? '',
+          photoUrl: data.photoUrl,
+          photoPublicId: data.photoPublicId,
+          lat: data.lat,
+          lng: data.lng,
+          locationLabel: data.locationLabel,
+          createdAt: data.createdAt?.toMillis?.() ?? Date.now(),
+          likes: data.likes ?? 0,
+          likedBy: data.likedBy ?? [],
+        } as Capture
+      })
+      callback(captures)
+    },
+    (error) => {
+      console.error('subscribeToCaptures failed:', error)
+      onError?.(error)
+    },
+  )
+}
+
+export function subscribeToCapture(
+  id: string,
+  callback: (capture: Capture | null) => void,
+  onError?: (error: Error) => void,
+): () => void {
+  const ref = doc(db, CAPTURES, id)
+  return onSnapshot(
+    ref,
+    (snap) => {
+      if (!snap.exists()) {
+        callback(null)
+        return
+      }
+      const data = snap.data()
+      callback({
+        id: snap.id,
         userId: data.userId,
         userName: data.userName,
         pokemonName: data.pokemonName,
@@ -44,36 +88,13 @@ export function subscribeToCaptures(callback: (captures: Capture[]) => void): ()
         createdAt: data.createdAt?.toMillis?.() ?? Date.now(),
         likes: data.likes ?? 0,
         likedBy: data.likedBy ?? [],
-      } as Capture
-    })
-    callback(captures)
-  })
-}
-
-export function subscribeToCapture(id: string, callback: (capture: Capture | null) => void): () => void {
-  const ref = doc(db, CAPTURES, id)
-  return onSnapshot(ref, (snap) => {
-    if (!snap.exists()) {
-      callback(null)
-      return
-    }
-    const data = snap.data()
-    callback({
-      id: snap.id,
-      userId: data.userId,
-      userName: data.userName,
-      pokemonName: data.pokemonName,
-      comment: data.comment ?? '',
-      photoUrl: data.photoUrl,
-      photoPublicId: data.photoPublicId,
-      lat: data.lat,
-      lng: data.lng,
-      locationLabel: data.locationLabel,
-      createdAt: data.createdAt?.toMillis?.() ?? Date.now(),
-      likes: data.likes ?? 0,
-      likedBy: data.likedBy ?? [],
-    })
-  })
+      })
+    },
+    (error) => {
+      console.error('subscribeToCapture failed:', error)
+      onError?.(error)
+    },
+  )
 }
 
 export async function toggleLike(captureId: string, userId: string, isLiked: boolean): Promise<void> {

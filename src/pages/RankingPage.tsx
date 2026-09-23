@@ -10,11 +10,12 @@ import './RankingPage.css'
 
 export function RankingPage() {
   const [captures, setCaptures] = useState<Capture[] | null>(null)
+  const [error, setError] = useState<string | null>(null)
   const [tab, setTab] = useState<'captures' | 'trainers'>('captures')
   const navigate = useNavigate()
 
   useEffect(() => {
-    const unsub = subscribeToCaptures(setCaptures)
+    const unsub = subscribeToCaptures(setCaptures, (err) => setError(err.message))
     return unsub
   }, [])
 
@@ -57,7 +58,9 @@ export function RankingPage() {
         </button>
       </div>
 
-      {captures === null && <Loading />}
+      {error && <DialogBox>No se pudieron cargar las capturas: {error}</DialogBox>}
+
+      {!error && captures === null && <Loading />}
 
       {captures !== null && tab === 'captures' && (
         <RetroPanel>

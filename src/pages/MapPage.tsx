@@ -13,12 +13,22 @@ const DEFAULT_CENTER: [number, number] = [40.4168, -3.7038] // Madrid, punto de 
 
 export function MapPage() {
   const [captures, setCaptures] = useState<Capture[] | null>(null)
+  const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
 
   useEffect(() => {
-    const unsub = subscribeToCaptures(setCaptures)
+    const unsub = subscribeToCaptures(setCaptures, (err) => setError(err.message))
     return unsub
   }, [])
+
+  if (error) {
+    return (
+      <div className="screen">
+        <TopBar title="Mapa" />
+        <DialogBox>No se pudieron cargar las capturas: {error}</DialogBox>
+      </div>
+    )
+  }
 
   if (captures === null) {
     return (

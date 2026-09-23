@@ -9,10 +9,11 @@ import './PokedexPage.css'
 
 export function PokedexPage() {
   const [captures, setCaptures] = useState<Capture[] | null>(null)
+  const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
 
   useEffect(() => {
-    const unsub = subscribeToCaptures(setCaptures)
+    const unsub = subscribeToCaptures(setCaptures, (err) => setError(err.message))
     return unsub
   }, [])
 
@@ -20,7 +21,9 @@ export function PokedexPage() {
     <div className="screen">
       <TopBar title="Pokédex" />
 
-      {captures === null && <Loading label="Cargando capturas..." />}
+      {error && <DialogBox>No se pudieron cargar las capturas: {error}</DialogBox>}
+
+      {!error && captures === null && <Loading label="Cargando capturas..." />}
 
       {captures !== null && captures.length === 0 && (
         <DialogBox>Todavía no hay capturas. ¡Sé el primero en cazar un Pokémon!</DialogBox>

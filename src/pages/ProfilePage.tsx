@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { DialogBox } from '../components/DialogBox'
 import { RetroButton } from '../components/RetroButton'
 import { RetroPanel } from '../components/RetroPanel'
 import { TopBar } from '../components/TopBar'
@@ -12,9 +13,10 @@ export function ProfilePage() {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
   const [captures, setCaptures] = useState<Capture[] | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    const unsub = subscribeToCaptures(setCaptures)
+    const unsub = subscribeToCaptures(setCaptures, (err) => setError(err.message))
     return unsub
   }, [])
 
@@ -32,6 +34,8 @@ export function ProfilePage() {
   return (
     <div className="screen">
       <TopBar title="Perfil" />
+
+      {error && <DialogBox>No se pudieron cargar tus capturas: {error}</DialogBox>}
 
       <RetroPanel className="profile-card">
         <div className="profile-avatar">🧑</div>
