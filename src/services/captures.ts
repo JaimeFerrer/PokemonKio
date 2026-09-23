@@ -3,6 +3,7 @@ import {
   arrayRemove,
   arrayUnion,
   collection,
+  deleteDoc,
   doc,
   increment,
   onSnapshot,
@@ -103,4 +104,8 @@ export async function toggleLike(captureId: string, userId: string, isLiked: boo
     likedBy: isLiked ? arrayRemove(userId) : arrayUnion(userId),
     likes: increment(isLiked ? -1 : 1),
   })
+}
+
+export async function deleteCapture(captureId: string): Promise<void> {
+  await deleteDoc(doc(db, CAPTURES, captureId))
 }

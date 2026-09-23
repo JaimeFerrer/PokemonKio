@@ -3,10 +3,11 @@ import { MapContainer, Marker, TileLayer } from 'react-leaflet'
 import { useNavigate, useParams } from 'react-router-dom'
 import { DialogBox } from '../components/DialogBox'
 import { Loading } from '../components/Loading'
+import { RetroButton } from '../components/RetroButton'
 import { RetroPanel } from '../components/RetroPanel'
 import { TopBar } from '../components/TopBar'
 import { useAuth } from '../context/AuthContext'
-import { subscribeToCapture, toggleLike } from '../services/captures'
+import { deleteCapture, subscribeToCapture, toggleLike } from '../services/captures'
 import type { Capture } from '../types'
 import { pokemonMarkerIcon } from '../mapIcon'
 import './CaptureDetailPage.css'
@@ -17,6 +18,7 @@ export function CaptureDetailPage() {
   const navigate = useNavigate()
   const [capture, setCapture] = useState<Capture | null | undefined>(undefined)
   const [error, setError] = useState<string | null>(null)
+  const [deleting, setDeleting] = useState(false)
 
   useEffect(() => {
     if (!id) return
@@ -52,9 +54,25 @@ export function CaptureDetailPage() {
     minute: '2-digit',
   })
 
+  const isOwner = user?.uid === capture.userId
+
   async function handleLike() {
     if (!user) return
     await toggleLike(capture!.id, user.uid, isLiked)
+  }
+
+  async function handleDelete() {
+    if (!isOwner) return
+    const confirmed = window.confirm(`¿Seguro que quieres borrar "${capture!.pokemonName}" de tu Pokédex?`)
+    if (!confirmed) return
+    setDeleting(true)
+    try {
+      await deleteCapture(capture!.id)
+      navigate('/pokedex')
+    } catch (err) {
+      setDeleting(false)
+      window.alert(err instanceof Error ? err.message : 'No se pudo borrar la captura.')
+    }
   }
 
   return (
@@ -96,6 +114,12 @@ export function CaptureDetailPage() {
       <button type="button" className="title-sm detail-view-map" onClick={() => navigate('/mapa')}>
         Ver en el mapa completo →
       </button>
+
+      {isOwner && (
+        <RetroButton variant="danger" onClick={handleDelete} disabled={deleting}>
+          {deleting ? 'Borrando...' : '🗑️ Borrar de mi Pokédex'}
+        </RetroButton>
+      )}
     </div>
   )
 }

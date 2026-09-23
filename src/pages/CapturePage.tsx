@@ -13,7 +13,8 @@ import './CapturePage.css'
 export function CapturePage() {
   const { user } = useAuth()
   const navigate = useNavigate()
-  const fileInputRef = useRef<HTMLInputElement>(null)
+  const cameraInputRef = useRef<HTMLInputElement>(null)
+  const galleryInputRef = useRef<HTMLInputElement>(null)
   const geo = useGeolocation()
 
   const [photoFile, setPhotoFile] = useState<File | null>(null)
@@ -88,16 +89,28 @@ export function CapturePage() {
           <div className="capture-photo__placeholder title-sm">Sin foto todavía</div>
         )}
         <input
-          ref={fileInputRef}
+          ref={cameraInputRef}
           type="file"
           accept="image/*"
           capture="environment"
           onChange={handleFileChange}
           style={{ display: 'none' }}
         />
-        <RetroButton type="button" variant="secondary" onClick={() => fileInputRef.current?.click()}>
-          {photoPreview ? 'Repetir foto' : '📷 Hacer foto'}
-        </RetroButton>
+        <input
+          ref={galleryInputRef}
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
+          style={{ display: 'none' }}
+        />
+        <div className="capture-photo__actions">
+          <RetroButton type="button" variant="secondary" onClick={() => cameraInputRef.current?.click()}>
+            {photoPreview ? 'Repetir foto' : '📷 Hacer foto'}
+          </RetroButton>
+          <RetroButton type="button" variant="secondary" onClick={() => galleryInputRef.current?.click()}>
+            🖼️ Elegir de la galería
+          </RetroButton>
+        </div>
       </RetroPanel>
 
       <RetroPanel>
