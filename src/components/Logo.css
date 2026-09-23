@@ -205,6 +205,25 @@
   overflow: visible;
 }
 
+/* =========================================
+   VARIANTE "image" (public/logo.png)
+   ========================================= */
+
+.logo--image {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.logo--image.logo--lg {
+  max-width: 360px;
+}
+
+.logo--image.logo--md {
+  max-width: 260px;
+}
+
 
 /* =========================================
    TAMAÑOS

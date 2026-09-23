@@ -2,7 +2,21 @@ import './Logo.css'
 
 const TOP_TEXT = Array.from('POKÉMON')
 
-export function Logo({ size = 'lg' }: { size?: 'lg' | 'md' }) {
+interface LogoProps {
+  size?: 'lg' | 'md'
+  /**
+   * 'text' (por defecto) dibuja el logo con CSS/SVG.
+   * 'image' usa public/logo.png en su lugar: sustituye ese archivo
+   * por tu propio diseño y cambia a este modo sin tocar más código.
+   */
+  variant?: 'text' | 'image'
+}
+
+export function Logo({ size = 'lg', variant = 'text' }: LogoProps) {
+  if (variant === 'image') {
+    return <img src="/logo.png" alt="PokemonKio" className={`logo logo--image logo--${size}`} />
+  }
+
   return (
     <div className={`logo logo--${size}`}>
       
