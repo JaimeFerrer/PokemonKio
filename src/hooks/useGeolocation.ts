@@ -10,7 +10,7 @@ interface GeoState {
 export function useGeolocation() {
   const [state, setState] = useState<GeoState>({ lat: null, lng: null, loading: false, error: null })
 
-  const locate = useCallback(() => {
+  const locate = useCallback((onSuccess?: (lat: number, lng: number) => void) => {
     if (!navigator.geolocation) {
       setState((s) => ({ ...s, error: 'Este dispositivo no soporta geolocalización' }))
       return
@@ -24,6 +24,7 @@ export function useGeolocation() {
           loading: false,
           error: null,
         })
+        onSuccess?.(pos.coords.latitude, pos.coords.longitude)
       },
       (err) => {
         setState((s) => ({ ...s, loading: false, error: err.message || 'No se pudo obtener la ubicación' }))

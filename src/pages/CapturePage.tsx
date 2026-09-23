@@ -1,6 +1,7 @@
 import { useRef, useState, type ChangeEvent, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { DialogBox } from '../components/DialogBox'
+import { LocationPicker } from '../components/LocationPicker'
 import { RetroButton } from '../components/RetroButton'
 import { RetroPanel } from '../components/RetroPanel'
 import { TopBar } from '../components/TopBar'
@@ -19,6 +20,7 @@ export function CapturePage() {
 
   const [photoFile, setPhotoFile] = useState<File | null>(null)
   const [photoPreview, setPhotoPreview] = useState<string | null>(null)
+  const [location, setLocation] = useState<[number, number] | null>(null)
   const [pokemonName, setPokemonName] = useState('')
   const [comment, setComment] = useState('')
   const [submitting, setSubmitting] = useState(false)
@@ -40,8 +42,8 @@ export function CapturePage() {
       setError('Hace falta una foto del Pokémon capturado.')
       return
     }
-    if (geo.lat == null || geo.lng == null) {
-      setError('Necesitamos tu ubicación para marcar la captura en el mapa.')
+    if (!location) {
+      setError('Elige dónde capturaste al Pokémon: toca el mapa o usa tu ubicación actual.')
       return
     }
     if (!pokemonName.trim()) {
@@ -59,8 +61,8 @@ export function CapturePage() {
         comment: comment.trim(),
         photoUrl: url,
         photoPublicId: publicId,
-        lat: geo.lat,
-        lng: geo.lng,
+        lat: location[0],
+        lng: location[1],
       })
       navigate('/pokedex')
     } catch (err) {
@@ -113,14 +115,25 @@ export function CapturePage() {
         </div>
       </RetroPanel>
 
-      <RetroPanel>
-        <button type="button" className="capture-location title-sm" onClick={geo.locate} disabled={geo.loading}>
-          {geo.loading
-            ? 'Localizando...'
-            : geo.lat != null
-              ? `📍 Ubicación lista (${geo.lat.toFixed(4)}, ${geo.lng!.toFixed(4)})`
-              : '📍 Usar mi ubicación actual'}
-        </button>
+      <RetroPanel className="capture-location-panel">
+        <span className="title-sm">📍 ¿Dónde lo capturaste?</span>
+        <LocationPicker value={location} onChange={setLocation} />
+        <RetroButton
+          type="button"
+          variant="secondary"
+          onClick={() => geo.locate((lat, lng) => setLocation([lat, lng]))}
+          disabled={geo.loading}
+        >
+          {geo.loading ? 'Localizando...' : 'Usar mi ubicación actual'}
+        </RetroButton>
+        {location && (
+          <p className="text-body text-muted">
+            Seleccionada: {location[0].toFixed(4)}, {location[1].toFixed(4)}
+          </p>
+        )}
+        <p className="text-body text-muted capture-location-hint">
+          También puedes tocar el mapa o arrastrar el pin para ajustarla a mano.
+        </p>
         {geo.error && <p className="text-body" style={{ color: 'var(--accent-red)' }}>{geo.error}</p>}
       </RetroPanel>
 
