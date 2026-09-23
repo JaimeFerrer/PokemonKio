@@ -39,7 +39,7 @@ export function RankingPage() {
   return (
     <div className="screen">
       <TopBar title="Ranking" />
-      <DialogBox>¡Aquí se decide quién es el mejor cazador de Pokémon graciosos!</DialogBox>
+      <DialogBox>¡Aquí se decide quién es el mejor cazador de Pokémon!</DialogBox>
 
       <div className="ranking-tabs">
         <button
