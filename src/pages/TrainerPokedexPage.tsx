@@ -42,7 +42,7 @@ export function TrainerPokedexPage() {
 
   return (
     <div className="screen">
-      <TopBar title={trainerName} />
+      <TopBar title="Perfil de entrenador" />
 
       {error && <DialogBox>No se pudieron cargar las capturas: {error}</DialogBox>}
 
