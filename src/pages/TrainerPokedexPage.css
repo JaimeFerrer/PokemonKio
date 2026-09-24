@@ -1,0 +1,35 @@
+.trainer-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.trainer-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--paper);
+  border: 3px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.trainer-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.trainer-stats {
+  display: flex;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.trainer-pokedex-heading {
+  margin: 4px 0 -6px;
+}

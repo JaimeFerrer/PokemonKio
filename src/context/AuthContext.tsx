@@ -19,6 +19,7 @@ interface AuthContextValue {
   logout: () => Promise<void>
   resetPassword: (email: string) => Promise<void>
   updateProfilePhoto: (photoUrl: string) => Promise<void>
+  removeProfilePhoto: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined)
@@ -65,9 +66,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser((prev) => (prev ? ({ ...prev, photoURL: photoUrl } as User) : prev))
   }
 
+  async function removeProfilePhoto() {
+    if (!auth.currentUser) return
+    await updateProfile(auth.currentUser, { photoURL: null })
+    await setDoc(doc(db, 'users', auth.currentUser.uid), { photoURL: null }, { merge: true })
+    setUser((prev) => (prev ? ({ ...prev, photoURL: null } as User) : prev))
+  }
+
   return (
     <AuthContext.Provider
-      value={{ user, loading, register, login, logout, resetPassword, updateProfilePhoto }}
+      value={{ user, loading, register, login, logout, resetPassword, updateProfilePhoto, removeProfilePhoto }}
     >
       {children}
     </AuthContext.Provider>

@@ -62,7 +62,7 @@ export function CaptureDetailPage() {
   const isOwner = user?.uid === capture.userId
 
   async function handleLike() {
-    if (!user) return
+    if (!user || isOwner) return
     await toggleLike(capture!.id, user.uid, isLiked)
   }
 
@@ -145,9 +145,13 @@ export function CaptureDetailPage() {
             <span className="title-sm text-muted">{date}</span>
           </div>
           {capture.comment && <p className="text-body detail-comment">"{capture.comment}"</p>}
-          <button type="button" className="detail-like" onClick={handleLike} disabled={!user}>
-            {isLiked ? '❤️' : '🤍'} {capture.likes} me gusta
-          </button>
+          {isOwner ? (
+            <span className="detail-like detail-like--disabled">🤍 {capture.likes} me gusta</span>
+          ) : (
+            <button type="button" className="detail-like" onClick={handleLike} disabled={!user}>
+              {isLiked ? '❤️' : '🤍'} {capture.likes} me gusta
+            </button>
+          )}
         </RetroPanel>
       )}
 

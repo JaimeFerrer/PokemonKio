@@ -32,13 +32,20 @@
 }
 
 .detail-like {
+  display: inline-block;
   background: var(--paper);
   color: var(--ink);
   border: 3px solid var(--border);
   border-radius: 4px;
   padding: 10px 14px;
   font-size: 11px;
+  font-family: var(--font-pixel);
   cursor: pointer;
+}
+
+.detail-like--disabled {
+  cursor: default;
+  opacity: 0.7;
 }
 
 .detail-map {

@@ -5,6 +5,12 @@ export interface AppUser {
   createdAt: number
 }
 
+export interface UserProfile {
+  uid: string
+  displayName: string
+  photoURL?: string
+}
+
 export interface Capture {
   id: string
   userId: string

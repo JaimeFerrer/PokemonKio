@@ -11,7 +11,7 @@ import type { Capture } from '../types'
 import './ProfilePage.css'
 
 export function ProfilePage() {
-  const { user, logout, updateProfilePhoto } = useAuth()
+  const { user, logout, updateProfilePhoto, removeProfilePhoto } = useAuth()
   const navigate = useNavigate()
   const photoInputRef = useRef<HTMLInputElement>(null)
   const [captures, setCaptures] = useState<Capture[] | null>(null)
@@ -51,6 +51,18 @@ export function ProfilePage() {
     }
   }
 
+  async function handleRemovePhoto() {
+    setPhotoError(null)
+    setUploadingPhoto(true)
+    try {
+      await removeProfilePhoto()
+    } catch (err) {
+      setPhotoError(err instanceof Error ? err.message : 'No se pudo quitar la foto de perfil.')
+    } finally {
+      setUploadingPhoto(false)
+    }
+  }
+
   return (
     <div className="screen">
       <TopBar title="Perfil" />
@@ -77,6 +89,11 @@ export function ProfilePage() {
         <div>
           <p className="title-sm">{user?.displayName}</p>
           <p className="text-body text-muted">{user?.email}</p>
+          {user?.photoURL && (
+            <button type="button" className="profile-remove-photo" onClick={handleRemovePhoto} disabled={uploadingPhoto}>
+              Quitar foto de perfil
+            </button>
+          )}
         </div>
       </RetroPanel>
 

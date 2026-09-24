@@ -26,9 +26,9 @@ export function RankingPage() {
 
   const topTrainers = useMemo(() => {
     if (!captures) return []
-    const map = new Map<string, { name: string; count: number; likes: number }>()
+    const map = new Map<string, { userId: string; name: string; count: number; likes: number }>()
     for (const c of captures) {
-      const entry = map.get(c.userId) ?? { name: c.userName, count: 0, likes: 0 }
+      const entry = map.get(c.userId) ?? { userId: c.userId, name: c.userName, count: 0, likes: 0 }
       entry.count += 1
       entry.likes += c.likes
       map.set(c.userId, entry)
@@ -86,7 +86,11 @@ export function RankingPage() {
           {topTrainers.length === 0 && <p className="text-body">Sin entrenadores todavía.</p>}
           <ol className="ranking-list">
             {topTrainers.map((t, i) => (
-              <li key={t.name + i} className="ranking-list__item">
+              <li
+                key={t.userId}
+                className="ranking-list__item"
+                onClick={() => navigate(`/entrenador/${t.userId}`, { state: { userName: t.name } })}
+              >
                 <span className="ranking-list__pos">{i + 1}</span>
                 <div className="ranking-list__info">
                   <span className="title-sm">{t.name}</span>
