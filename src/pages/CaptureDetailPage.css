@@ -8,6 +8,15 @@
   display: block;
 }
 
+.detail-photo__btn {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
 .detail-meta {
   display: flex;
   justify-content: space-between;

@@ -15,6 +15,24 @@
   gap: 6px;
 }
 
+.pokedex-card__photo {
+  min-width: 0;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: left;
+  color: inherit;
+  font-family: var(--font-pixel);
+}
+
+.pokedex-card__photo:active {
+  transform: translate(1px, 1px);
+}
+
 .pokedex-card__number {
   font-size: 8px;
   color: var(--panel);
@@ -28,11 +46,6 @@
   border: 2px solid var(--border);
   border-radius: 4px;
   background: var(--paper-dark);
-  cursor: pointer;
-}
-
-.pokedex-card__img-wrap:active {
-  transform: translate(1px, 1px);
 }
 
 .pokedex-card__img {
@@ -42,20 +55,11 @@
   object-fit: cover;
 }
 
-.pokedex-card__name-btn {
-  background: none;
-  border: none;
-  padding: 0;
-  margin: 0;
-  cursor: pointer;
-  text-align: left;
-  color: inherit;
-  font-family: var(--font-pixel);
+.pokedex-card__name {
   font-size: 9px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  text-decoration: underline;
 }
 
 .pokedex-card__trainer {

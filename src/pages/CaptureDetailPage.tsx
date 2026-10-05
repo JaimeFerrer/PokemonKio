@@ -2,6 +2,7 @@ import { useEffect, useState, type FormEvent } from 'react'
 import { MapContainer, Marker, TileLayer } from 'react-leaflet'
 import { useNavigate, useParams } from 'react-router-dom'
 import { DialogBox } from '../components/DialogBox'
+import { ImageLightbox } from '../components/ImageLightbox'
 import { Loading } from '../components/Loading'
 import { RetroButton } from '../components/RetroButton'
 import { RetroPanel } from '../components/RetroPanel'
@@ -24,6 +25,7 @@ export function CaptureDetailPage() {
   const [editComment, setEditComment] = useState('')
   const [savingEdit, setSavingEdit] = useState(false)
   const [editError, setEditError] = useState<string | null>(null)
+  const [lightboxOpen, setLightboxOpen] = useState(false)
 
   useEffect(() => {
     if (!id) return
@@ -111,8 +113,18 @@ export function CaptureDetailPage() {
       <TopBar title={capture.pokemonName} />
 
       <RetroPanel className="detail-photo">
-        <img src={capture.photoUrl} alt={capture.pokemonName} />
+        <button type="button" className="detail-photo__btn" onClick={() => setLightboxOpen(true)}>
+          <img src={capture.photoUrl} alt={capture.pokemonName} />
+        </button>
       </RetroPanel>
+
+      {lightboxOpen && (
+        <ImageLightbox
+          photoUrl={capture.photoUrl}
+          alt={capture.pokemonName}
+          onClose={() => setLightboxOpen(false)}
+        />
+      )}
 
       {editing ? (
         <RetroPanel>
