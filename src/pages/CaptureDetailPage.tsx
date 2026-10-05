@@ -1,6 +1,6 @@
-import { useEffect, useState, type FormEvent } from 'react'
+import { useEffect, useRef, useState, type FormEvent, type TouchEvent } from 'react'
 import { MapContainer, Marker, TileLayer } from 'react-leaflet'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { DialogBox } from '../components/DialogBox'
 import { ImageLightbox } from '../components/ImageLightbox'
 import { Loading } from '../components/Loading'
@@ -17,6 +17,7 @@ export function CaptureDetailPage() {
   const { id } = useParams<{ id: string }>()
   const { user } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
   const [capture, setCapture] = useState<Capture | null | undefined>(undefined)
   const [error, setError] = useState<string | null>(null)
   const [deleting, setDeleting] = useState(false)
@@ -26,6 +27,34 @@ export function CaptureDetailPage() {
   const [savingEdit, setSavingEdit] = useState(false)
   const [editError, setEditError] = useState<string | null>(null)
   const [lightboxOpen, setLightboxOpen] = useState(false)
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null)
+
+  const captureIds = (location.state as { captureIds?: string[] } | null)?.captureIds
+  const currentIndex = captureIds && id ? captureIds.indexOf(id) : -1
+  const prevId = currentIndex > 0 ? captureIds![currentIndex - 1] : null
+  const nextId =
+    captureIds && currentIndex >= 0 && currentIndex < captureIds.length - 1 ? captureIds[currentIndex + 1] : null
+
+  function goToCapture(targetId: string) {
+    navigate(`/pokedex/${targetId}`, { state: { captureIds }, replace: true })
+  }
+
+  function handleTouchStart(e: TouchEvent) {
+    const t = e.touches[0]
+    touchStartRef.current = { x: t.clientX, y: t.clientY }
+  }
+
+  function handleTouchEnd(e: TouchEvent) {
+    const start = touchStartRef.current
+    touchStartRef.current = null
+    if (!start) return
+    const t = e.changedTouches[0]
+    const dx = t.clientX - start.x
+    const dy = t.clientY - start.y
+    if (Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy)) return
+    if (dx < 0 && nextId) goToCapture(nextId)
+    else if (dx > 0 && prevId) goToCapture(prevId)
+  }
 
   useEffect(() => {
     if (!id) return
@@ -109,8 +138,34 @@ export function CaptureDetailPage() {
   }
 
   return (
-    <div className="screen">
+    <div className="screen" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
       <TopBar title={capture.pokemonName} />
+
+      {captureIds && captureIds.length > 1 && (
+        <div className="detail-pager">
+          <button
+            type="button"
+            className="detail-pager__btn"
+            onClick={() => prevId && goToCapture(prevId)}
+            disabled={!prevId}
+            aria-label="Pokémon anterior"
+          >
+            ◀
+          </button>
+          <span className="text-body text-muted">
+            {currentIndex + 1} / {captureIds.length}
+          </span>
+          <button
+            type="button"
+            className="detail-pager__btn"
+            onClick={() => nextId && goToCapture(nextId)}
+            disabled={!nextId}
+            aria-label="Siguiente Pokémon"
+          >
+            ▶
+          </button>
+        </div>
+      )}
 
       <RetroPanel className="detail-photo">
         <button type="button" className="detail-photo__btn" onClick={() => setLightboxOpen(true)}>

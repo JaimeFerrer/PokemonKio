@@ -17,6 +17,35 @@
   cursor: pointer;
 }
 
+.detail-pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.detail-pager__btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  background: var(--paper);
+  color: var(--ink);
+  border: 3px solid var(--border);
+  font-size: 12px;
+  cursor: pointer;
+  box-shadow: 2px 2px 0 var(--border);
+}
+
+.detail-pager__btn:active:not(:disabled) {
+  transform: translate(1px, 1px);
+  box-shadow: none;
+}
+
+.detail-pager__btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
 .detail-meta {
   display: flex;
   justify-content: space-between;

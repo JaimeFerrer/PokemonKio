@@ -67,7 +67,13 @@ export function RankingPage() {
           {topCaptures.length === 0 && <p className="text-body">Sin capturas todavía.</p>}
           <ol className="ranking-list">
             {topCaptures.map((c, i) => (
-              <li key={c.id} className="ranking-list__item" onClick={() => navigate(`/pokedex/${c.id}`)}>
+              <li
+                key={c.id}
+                className="ranking-list__item"
+                onClick={() =>
+                  navigate(`/pokedex/${c.id}`, { state: { captureIds: topCaptures.map((tc) => tc.id) } })
+                }
+              >
                 <span className="ranking-list__pos">{i + 1}</span>
                 <img src={c.photoUrl} alt={c.pokemonName} />
                 <div className="ranking-list__info">

@@ -9,12 +9,17 @@ interface PokedexGridProps {
 
 export function PokedexGrid({ captures, showTrainer = false }: PokedexGridProps) {
   const navigate = useNavigate()
+  const captureIds = captures.map((c) => c.id)
 
   return (
     <div className="pokedex-grid">
       {captures.map((c, i) => (
         <div key={c.id} className="pokedex-card pixel-border">
-          <button type="button" className="pokedex-card__photo" onClick={() => navigate(`/pokedex/${c.id}`)}>
+          <button
+            type="button"
+            className="pokedex-card__photo"
+            onClick={() => navigate(`/pokedex/${c.id}`, { state: { captureIds } })}
+          >
             <span className="pokedex-card__number">#{String(captures.length - i).padStart(3, '0')}</span>
             <div className="pokedex-card__img-wrap">
               <img src={c.photoUrl} alt={c.pokemonName} className="pokedex-card__img" />
