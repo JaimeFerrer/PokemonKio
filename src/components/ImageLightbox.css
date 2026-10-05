@@ -34,15 +34,9 @@
   cursor: pointer;
 }
 
-.lightbox__download {
-  background: var(--accent-yellow);
-  color: var(--ink);
-  border: 3px solid var(--border);
-  border-radius: 4px;
-  padding: 10px 16px;
-  font-family: var(--font-pixel);
-  font-size: 11px;
-  text-decoration: none;
-  cursor: pointer;
-  box-shadow: 3px 3px 0 var(--border);
+.lightbox__hint {
+  color: var(--paper);
+  font-size: 9px;
+  text-align: center;
+  opacity: 0.8;
 }

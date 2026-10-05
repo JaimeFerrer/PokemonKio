@@ -17,32 +17,22 @@ export function PokedexGrid({ captures, showTrainer = false }: PokedexGridProps)
     <div className="pokedex-grid">
       {captures.map((c, i) => (
         <div key={c.id} className="pokedex-card pixel-border">
+          <span className="pokedex-card__number">#{String(captures.length - i).padStart(3, '0')}</span>
           <div
-            className="pokedex-card__photo"
-            onClick={() => navigate(`/pokedex/${c.id}`)}
+            className="pokedex-card__img-wrap"
+            onClick={() => setLightboxCapture(c)}
             role="button"
             tabIndex={0}
+            aria-label={`Ver foto de ${c.pokemonName} a pantalla completa`}
             onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') navigate(`/pokedex/${c.id}`)
+              if (e.key === 'Enter' || e.key === ' ') setLightboxCapture(c)
             }}
           >
-            <span className="pokedex-card__number">#{String(captures.length - i).padStart(3, '0')}</span>
-            <div className="pokedex-card__img-wrap">
-              <img src={c.photoUrl} alt={c.pokemonName} className="pokedex-card__img" />
-              <button
-                type="button"
-                className="pokedex-card__expand"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  setLightboxCapture(c)
-                }}
-                aria-label="Ampliar foto"
-              >
-                🔍
-              </button>
-            </div>
-            <span className="pokedex-card__name">{c.pokemonName}</span>
+            <img src={c.photoUrl} alt={c.pokemonName} className="pokedex-card__img" />
           </div>
+          <button type="button" className="pokedex-card__name-btn" onClick={() => navigate(`/pokedex/${c.id}`)}>
+            {c.pokemonName}
+          </button>
           {showTrainer && (
             <button
               type="button"
