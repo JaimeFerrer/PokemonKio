@@ -33,10 +33,3 @@
   font-size: 14px;
   cursor: pointer;
 }
-
-.lightbox__hint {
-  color: var(--paper);
-  font-size: 9px;
-  text-align: center;
-  opacity: 0.8;
-}

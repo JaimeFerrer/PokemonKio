@@ -13,7 +13,6 @@ export function ImageLightbox({ photoUrl, alt, onClose }: ImageLightboxProps) {
         ✕
       </button>
       <img src={photoUrl} alt={alt} className="lightbox__img" onClick={(e) => e.stopPropagation()} />
-      <p className="lightbox__hint">Mantén pulsada la foto para guardarla</p>
     </div>
   )
 }
