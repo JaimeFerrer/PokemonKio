@@ -33,7 +33,7 @@ export function RankingPage() {
       entry.likes += c.likes
       map.set(c.userId, entry)
     }
-    return [...map.values()].sort((a, b) => b.count - a.count || b.likes - a.likes)
+    return [...map.values()].sort((a, b) => b.likes - a.likes || b.count - a.count)
   }, [captures])
 
   return (
